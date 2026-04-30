@@ -63,3 +63,5 @@ export const priceList = [
   { name: 'Head Massage', duration: '30 minutes', price: '$30' },
   { name: 'Classic Shave', duration: '20 minutes', price: '$18' },
 ]
+
+

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Camera, Mail, MapPin, MessageCircle, Phone, Scissors, Share2 } from 'lucide-react'
+import { Camera, Mail, MapPin, MessageCircle, Phone, Scissors, Share2,} from 'lucide-react'
 import Button from './Button'
 import Logo from '../../assets/logo.png'
 
