@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&family=Playfair+Display:wght@700;800&display=swap');
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-neutral-900 font-body antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: #D4AF37;
+    color: #050505;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0b0b0b;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D4AF37;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #F4D03F;
+  }
+
+  input,
+  select,
+  textarea {
+    color-scheme: light;
+  }
+}
+
+@layer components {
+  .section-kicker {
+    @apply text-gold-500 font-heading text-sm uppercase tracking-wide;
+  }
+
+  .section-heading {
+    @apply font-heading text-4xl sm:text-5xl lg:text-6xl font-bold uppercase leading-tight tracking-normal;
+  }
+
+  .diamond-mark {
+    @apply size-2 rotate-45 bg-gold-500 inline-block;
+  }
+
+  .image-wash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(5, 5, 5, 0.12), rgba(5, 5, 5, 0.65));
+  }
+
+  .field {
+    @apply w-full border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out both;
+}
