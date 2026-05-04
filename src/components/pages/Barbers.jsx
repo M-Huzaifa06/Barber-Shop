@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom'
-import Button from '../common/Button'
 import { staff } from '../../data/siteData'
 import { Search, Link as LinkIcon } from "lucide-react";
 
 const Barbers = () => {
+  // const [selected, setSelected] = useState(null);
   return (
     <div className="bg-paper pt-20">
       <section className="relative overflow-hidden bg-black px-4 py-24 text-center text-white sm:px-6 lg:px-8">
@@ -68,7 +67,6 @@ const Barbers = () => {
                 {/* Icons */}
                 <div className="flex justify-center gap-4 mt-5">
                   <button
-                    onClick={() => setSelected(member)}
                     className="w-12 h-12 flex items-center justify-center border border-gold-500 text-gold-500 rounded-lg transition hover:bg-gold-500 hover:text-white"
                   >
                     <Search size={18} />

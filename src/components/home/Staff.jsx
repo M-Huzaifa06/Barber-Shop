@@ -1,12 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { X, Search, Link as LinkIcon } from "lucide-react";
 import Button from "../common/Button";
 import SectionTitle from "../common/SectionTitle";
-import { staff } from "../../data/siteData";
+import API from "../../utils/api";
 
 const Staff = ({ compact = false }) => {
+  const [staff, setStaff] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        console.log('Fetching staff from API...');
+        const { data } = await API.get('/barbers');
+        console.log('Staff data received:', data);
+        setStaff(data.data || data);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching staff:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStaff();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-20 text-gray-600">Loading staff...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-20 text-red-600">Error loading staff: {error}</div>;
+  }
+
+  if (staff.length === 0) {
+    return <div className="text-center py-20 text-gray-600">No staff available</div>;
+  }
 
   return (
     <section id="OurStaff" className="bg-white px-4 py-20 sm:px-6 lg:px-8">

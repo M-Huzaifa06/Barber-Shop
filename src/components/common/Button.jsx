@@ -32,7 +32,7 @@ const Button = forwardRef(({
     ? motion.button
     : Component === 'a'
       ? motion.a
-      : motion(Component || Link)
+      : motion.create(Component || Link)
 
   return (
     <ComponentTag

@@ -1,8 +1,34 @@
-import { generateSlots } from "./data";
+import { useState, useEffect } from "react";
+import API from "../../utils/api";
 
 export default function StepDateTime({ booking, setBooking }) {
-  const totalDuration = (booking.services || []).reduce((a, s) => a + s.duration, 0) || 30;
-  const slots = booking.date ? generateSlots(totalDuration) : [];
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (booking.date && booking.barber && booking.services && booking.services.length > 0) {
+      const fetchAvailableSlots = async () => {
+        setLoading(true);
+        try {
+          const serviceIds = booking.services.map(s => s._id);
+          const { data } = await API.post('/availability/slots', {
+            barberId: booking.barber._id,
+            date: booking.date,
+            serviceIds: serviceIds
+          });
+          setAvailableSlots(data.data.slots.filter(slot => slot.available));
+        } catch (error) {
+          console.error('Error fetching available slots:', error);
+          setAvailableSlots([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchAvailableSlots();
+    } else {
+      setAvailableSlots([]);
+    }
+  }, [booking.date, booking.barber, booking.services]);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
@@ -17,20 +43,27 @@ export default function StepDateTime({ booking, setBooking }) {
       {booking.date && (
         <>
           <div className="flex justify-between items-center mb-3">
-            <p className="text-sm font-semibold text-gray-700">Available Slots ({totalDuration} min)</p>
+            <p className="text-sm font-semibold text-gray-700">
+              Available Slots {loading ? '(Loading...)' : `(${availableSlots.length} available)`}
+            </p>
             <p className="text-xs text-gray-400">Shift: 09:00 - 19:00</p>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            {slots.map(slot => (
+            {availableSlots.map(slot => (
               <button
-                key={slot}
-                onClick={() => setBooking(prev => ({ ...prev, time: slot }))}
+                key={slot.time}
+                onClick={() => setBooking(prev => ({ ...prev, time: slot.time }))}
                 className={`py-3 rounded-xl border-2 text-sm font-semibold transition-all hover:border-[#C9A84C] hover:bg-amber-50
-                  ${booking.time === slot ? "border-[#C9A84C] bg-amber-50 text-[#C9A84C]" : "border-gray-200 text-gray-700"}`}
+                  ${booking.time === slot.time ? "border-[#C9A84C] bg-amber-50 text-[#C9A84C]" : "border-gray-200 text-gray-700"}`}
               >
-                {slot}
+                {slot.time}
               </button>
             ))}
+            {!loading && availableSlots.length === 0 && (
+              <p className="col-span-full text-center text-gray-500 py-4">
+                No available slots for this date
+              </p>
+            )}
           </div>
         </>
       )}

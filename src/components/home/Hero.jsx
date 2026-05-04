@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Clock, MapPin, Phone, Scissors } from 'lucide-react'
+import { Clock, MapPin, Phone } from 'lucide-react'
 import logo_home from '../../assets/logo_home.png'
 import Button from '../common/Button'
 

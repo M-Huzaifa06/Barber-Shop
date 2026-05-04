@@ -1,16 +1,6 @@
-import { Link } from 'react-router-dom'
-import { Award, Clock, ShieldCheck, Sparkles, } from 'lucide-react'
-import Button from '../common/Button'
 import OurStory from '../about/OurStory'
 import Features from '../about/Features'
 import GroomingCTA from '../about/GroomingCTA'
-
-const values = [
-  { icon: Award, title: 'Craft First', text: 'Every appointment starts with the shape, texture, and routine of the person in the chair.' },
-  { icon: Clock, title: 'Respect Time', text: 'Online booking, clear durations, and careful scheduling keep the day moving smoothly.' },
-  { icon: Sparkles, title: 'Premium Finish', text: 'Hot towels, clean tools, quality product, and mirror-ready styling complete the service.' },
-  { icon: ShieldCheck, title: 'Consistent Standards', text: 'Each barber works from the same service principles while bringing their own specialty.' },
-]
 
 const About = () => {
   return (

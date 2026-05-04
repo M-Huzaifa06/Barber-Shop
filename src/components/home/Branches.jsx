@@ -1,11 +1,45 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Clock, MapPin, Phone } from "lucide-react";
 import Button from "../common/Button";
 import SectionTitle from "../common/SectionTitle";
-import { branches } from "../../data/siteData";
+import API from "../../utils/api";
 
 const Branches = ({ limit = 4, showTitle = true }) => {
+  const [branches, setBranches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      try {
+        console.log('Fetching branches from API...');
+        const { data } = await API.get('/branches');
+        console.log('Branches data received:', data);
+        setBranches(data.data || data);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching branches:', error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBranches();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-20 text-gray-600">Loading branches...</div>;
+  }
+
+  if (error) {  
+    return <div className="text-center py-20 text-red-600">Error loading branches: {error}</div>;
+  }
+
+  if (branches.length === 0) {
+    return <div className="text-center py-20 text-gray-600">No branches available</div>;
+  }
   return (
     <section id="Branches" className="bg-paper px-4 py-20 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">

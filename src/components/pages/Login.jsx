@@ -1,16 +1,30 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Scissors } from 'lucide-react'
 import Button from '../common/Button'
+import API from '../../utils/api'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ email: '', password: '' })
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     setSubmitted(true)
+    setError('')
+    try {
+      const { data } = await API.post('/auth/login', form)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data))
+      navigate('/')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed')
+    } finally {
+      setSubmitted(false)
+    }
   }
 
   return (
@@ -78,11 +92,17 @@ const Login = () => {
 
             {submitted && (
               <div className="border border-gold-500 bg-gold-500/10 p-3 text-sm text-gold-100">
-                Demo sign-in received. No authentication request was sent.
+                Logging in...
               </div>
             )}
 
-            <Button type="submit" fullWidth size="lg">
+            {error && (
+              <div className="border border-red-500 bg-red-500/10 p-3 text-sm text-red-100">
+                {error}
+              </div>
+            )}
+
+            <Button type="submit" fullWidth size="lg" disabled={submitted}>
               Sign In
             </Button>
           </form>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API from "../../utils/api";
 import { LocationIcon, UserIcon, CalendarIcon, BoxIcon } from "./icons";
 
 export default function StepConfirm({ booking, onConfirm }) {
@@ -6,6 +7,34 @@ export default function StepConfirm({ booking, onConfirm }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [confirmed, setConfirmed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleConfirm = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const bookingData = {
+        branchId: booking.branch._id,
+        barberId: booking.barber._id,
+        serviceIds: booking.services.map(s => s._id),
+        gender: booking.services[0]?.gender || 'male', // Assuming all services have same gender
+        date: booking.date,
+        startTime: booking.time,
+        customer: {
+          name,
+          email,
+          phone,
+        },
+      };
+      await API.post('/bookings', bookingData);
+      setConfirmed(true);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Booking failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (confirmed) {
     return (
@@ -52,7 +81,7 @@ export default function StepConfirm({ booking, onConfirm }) {
           <BoxIcon />
           <div className="flex-1">
             {(booking.services || []).map(s => (
-              <div key={s.id} className="flex justify-between text-sm text-gray-700">
+              <div key={s._id} className="flex justify-between text-sm text-gray-700">
                 <span>{s.name}</span>
                 <span className="text-[#C9A84C] font-semibold">£{s.price}</span>
               </div>
@@ -84,12 +113,18 @@ export default function StepConfirm({ booking, onConfirm }) {
         </div>
       </div>
       <button
-        disabled={!name || !email || !phone}
-        onClick={() => setConfirmed(true)}
+        disabled={!name || !email || !phone || loading}
+        onClick={handleConfirm}
         className="w-full mt-5 bg-[#C9A84C] text-white font-bold py-4 rounded-xl hover:bg-[#b8963e] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-base"
       >
-        Confirm Appointment
+        {loading ? 'Confirming...' : 'Confirm Appointment'}
       </button>
+
+      {error && (
+        <div className="mt-3 border border-red-500 bg-red-500/10 p-3 text-sm text-red-100">
+          {error}
+        </div>
+      )}
     </div>
   );
 }

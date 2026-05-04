@@ -42,7 +42,7 @@ export default function BookingSummary({ booking }) {
               <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Services</p>
               <div className="space-y-1">
                 {booking.services.map(s => (
-                  <div key={s.id} className="flex justify-between items-center">
+                  <div key={s._id} className="flex justify-between items-center">
                     <div className="flex items-center gap-1">
                       <BoxIcon />
                       <span className="text-gray-800 text-sm">{s.name}</span>
