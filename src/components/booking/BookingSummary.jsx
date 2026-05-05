@@ -2,6 +2,16 @@ import { CalendarIcon, LocationIcon, UserIcon, BoxIcon, CreditCardIcon } from ".
 
 export default function BookingSummary({ booking }) {
   const isEmpty = !booking.branch;
+
+  const totalMin = (booking.services || []).reduce((a, s) => a + s.duration, 0);
+
+  const calculateEndTime = (startTime, duration) => {
+    const [h, m] = startTime.split(':').map(Number);
+    const totalMins = h * 60 + m + duration;
+    const eh = Math.floor(totalMins / 60);
+    const em = totalMins % 60;
+    return `${eh.toString().padStart(2, '0')}:${em.toString().padStart(2, '0')}`;
+  };
   return (
     <div className="bg-white rounded-2xl border-2 border-[#C9A84C] shadow-sm p-5 min-w-60">
       <div className="flex items-center gap-2 mb-4">
@@ -67,7 +77,7 @@ export default function BookingSummary({ booking }) {
               <p className="text-xs font-bold tracking-widest text-gray-400 uppercase mb-1">Date & Time</p>
               <div className="flex items-center gap-1">
                 <CalendarIcon size={14} />
-                <span className="text-gray-800 text-sm font-semibold">{booking.date} at {booking.time}</span>
+                <span className="text-gray-800 text-sm font-semibold">{booking.date} at {booking.time} - {calculateEndTime(booking.time, totalMin)}</span>
               </div>
             </div>
           )}

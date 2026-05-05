@@ -5,6 +5,16 @@ export default function StepDateTime({ booking, setBooking }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const totalMin = (booking.services || []).reduce((a, s) => a + s.duration, 0);
+
+  const calculateEndTime = (startTime, duration) => {
+    const [h, m] = startTime.split(':').map(Number);
+    const totalMins = h * 60 + m + duration;
+    const eh = Math.floor(totalMins / 60);
+    const em = totalMins % 60;
+    return `${eh.toString().padStart(2, '0')}:${em.toString().padStart(2, '0')}`;
+  };
+
   useEffect(() => {
     if (booking.date && booking.barber && booking.services && booking.services.length > 0) {
       const fetchAvailableSlots = async () => {
@@ -56,7 +66,7 @@ export default function StepDateTime({ booking, setBooking }) {
                 className={`py-3 rounded-xl border-2 text-sm font-semibold transition-all hover:border-[#C9A84C] hover:bg-amber-50
                   ${booking.time === slot.time ? "border-[#C9A84C] bg-amber-50 text-[#C9A84C]" : "border-gray-200 text-gray-700"}`}
               >
-                {slot.time}
+                {slot.time} - {calculateEndTime(slot.time, totalMin)}
               </button>
             ))}
             {!loading && availableSlots.length === 0 && (

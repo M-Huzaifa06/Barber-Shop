@@ -10,6 +10,16 @@ export default function StepConfirm({ booking, onConfirm }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const totalMin = (booking.services || []).reduce((a, s) => a + s.duration, 0);
+
+  const calculateEndTime = (startTime, duration) => {
+    const [h, m] = startTime.split(':').map(Number);
+    const totalMins = h * 60 + m + duration;
+    const eh = Math.floor(totalMins / 60);
+    const em = totalMins % 60;
+    return `${eh.toString().padStart(2, '0')}:${em.toString().padStart(2, '0')}`;
+  };
+
   const handleConfirm = async () => {
     setLoading(true);
     setError("");
@@ -48,7 +58,7 @@ export default function StepConfirm({ booking, onConfirm }) {
         <p className="text-gray-500 text-center text-sm">
           Your appointment at <span className="font-semibold text-gray-800">{booking.branch?.name}</span> with{" "}
           <span className="font-semibold text-gray-800">{booking.barber?.name}</span> on{" "}
-          <span className="font-semibold text-gray-800">{booking.date} at {booking.time}</span> has been booked successfully.
+          <span className="font-semibold text-gray-800">{booking.date} at {booking.time} - {calculateEndTime(booking.time, totalMin)}</span> has been booked successfully.
         </p>
         <p className="text-gray-400 text-sm">A confirmation will be sent to {email}</p>
         <button
@@ -75,7 +85,7 @@ export default function StepConfirm({ booking, onConfirm }) {
         </div>
         <div className="flex items-center gap-2">
           <CalendarIcon size={14} />
-          <span className="text-sm text-gray-700 font-semibold">{booking.date} at {booking.time}</span>
+          <span className="text-sm text-gray-700 font-semibold">{booking.date} at {booking.time} - {calculateEndTime(booking.time, totalMin)}</span>
         </div>
         <div className="flex items-start gap-2">
           <BoxIcon />
