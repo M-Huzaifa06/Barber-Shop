@@ -61,7 +61,7 @@ const ServicesPage = () => {
       <section className="mx-auto grid max-w-7xl gap-8 px-4 py-20 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
         <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
           {serviceImages.map((image) => (
-            <img key={image} src={image} alt="Berger grooming service" className="h-56 w-full object-cover sm:h-64 lg:h-56" />
+            <img key={image} src={image} alt="Berger grooming service" className="h-56 w-full object-cover sm:h-64 lg:h-96" />
           ))}
         </div>
 
