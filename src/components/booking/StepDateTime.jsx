@@ -5,16 +5,6 @@ export default function StepDateTime({ booking, setBooking }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const totalMin = (booking.services || []).reduce((a, s) => a + s.duration, 0);
-
-  const calculateEndTime = (startTime, duration) => {
-    const [h, m] = startTime.split(':').map(Number);
-    const totalMins = h * 60 + m + duration;
-    const eh = Math.floor(totalMins / 60);
-    const em = totalMins % 60;
-    return `${eh.toString().padStart(2, '0')}:${em.toString().padStart(2, '0')}`;
-  };
-
   useEffect(() => {
     if (booking.date && booking.barber && booking.services && booking.services.length > 0) {
       const fetchAvailableSlots = async () => {
@@ -61,12 +51,12 @@ export default function StepDateTime({ booking, setBooking }) {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {availableSlots.map(slot => (
               <button
-                key={slot.time}
-                onClick={() => setBooking(prev => ({ ...prev, time: slot.time }))}
+                key={slot.startTime || slot.time}
+                onClick={() => setBooking(prev => ({ ...prev, time: slot.startTime || slot.time }))}
                 className={`py-3 rounded-xl border-2 text-sm font-semibold transition-all hover:border-[#C9A84C] hover:bg-amber-50
-                  ${booking.time === slot.time ? "border-[#C9A84C] bg-amber-50 text-[#C9A84C]" : "border-gray-200 text-gray-700"}`}
+                  ${booking.time === (slot.startTime || slot.time) ? "border-[#C9A84C] bg-amber-50 text-[#C9A84C]" : "border-gray-200 text-gray-700"}`}
               >
-                {slot.time} - {calculateEndTime(slot.time, totalMin)}
+                {slot.label || `${slot.time} to ${slot.endTime}`}
               </button>
             ))}
             {!loading && availableSlots.length === 0 && (
