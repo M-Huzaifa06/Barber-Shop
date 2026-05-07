@@ -6,7 +6,7 @@ import Button from "../common/Button";
 import SectionTitle from "../common/SectionTitle";
 import API from "../../utils/api";
 
-const Branches = ({ limit = 4, showTitle = true }) => {
+const Branches = ({ showTitle = true }) => {
   const [branches, setBranches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,7 +52,7 @@ const Branches = ({ limit = 4, showTitle = true }) => {
         )}
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {branches.slice(0, limit).map((branch, index) => (
+          {branches.map((branch, index) => (
             <motion.article
               key={branch.name}
               initial={{ opacity: 0, y: 28 }}
